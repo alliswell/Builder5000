@@ -1,0 +1,25 @@
+{
+  "name": "builder5000",
+  "version": "1.0.0",
+  "description": "3D Table Configurator",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.175.0",
+    "@react-three/fiber": "^8.18.0",
+    "@react-three/drei": "^9.122.0"
+  },
+  "devDependencies": {
+    "vite": "^6.3.4",
+    "@vitejs/plugin-react": "^4.4.1",
+    "tailwindcss": "^3.4.17",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3"
+  }
+}
