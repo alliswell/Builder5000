@@ -71,7 +71,7 @@ function RadioGroup({ options, value, onChange, showDesc }) {
   )
 }
 
-export default function ConfigPanel({ config, onChange, onExport, woodColor }) {
+export default function ConfigPanel({ config, onChange, onExport, canExport, exportHint, woodColor }) {
   const set = (key) => (val) => onChange(prev => ({ ...prev, [key]: val }))
 
   return (
@@ -195,12 +195,13 @@ export default function ConfigPanel({ config, onChange, onExport, woodColor }) {
       <div className="px-4 py-4 border-t border-neutral-700">
         <button
           onClick={onExport}
-          className="w-full bg-amber-600 hover:bg-amber-500 active:bg-amber-700 text-white font-semibold text-sm py-3 rounded-lg transition-colors"
+          disabled={!canExport}
+          className="w-full bg-amber-600 hover:bg-amber-500 active:bg-amber-700 disabled:bg-neutral-700 disabled:text-neutral-400 disabled:cursor-not-allowed text-white font-semibold text-sm py-3 rounded-lg transition-colors"
         >
           Download SketchUp Model (.glb)
         </button>
         <p className="text-xs text-neutral-500 text-center mt-2">
-          Import in SketchUp 2021+ via File &gt; Import
+          {exportHint}
         </p>
       </div>
     </div>
