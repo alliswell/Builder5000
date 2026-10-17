@@ -35,37 +35,19 @@ const TableModel = forwardRef(function TableModel(props, ref) {
   // Leg geometry (one shared geometry for all 4 legs)
   const legGeom = useMemo(() => {
     if (legStyle === 'turned') {
-      return new THREE.CylinderGeometry(legSize / 2 * 0.75, legSize / 2, legHeight, 16)
+      // Full radius at the apron, narrowing toward the foot
+      return new THREE.CylinderGeometry(legSize / 2, legSize / 2 * 0.75, legHeight, 16)
     }
     if (legStyle === 'tapered') {
-      // Custom tapered box: full size at bottom, 60% at top
-      const geom = new THREE.BufferGeometry()
-      const s = legSize / 2
-      const t = legSize * 0.3   // top half-size (60% of full)
-      const y0 = 0, y1 = legHeight
-      const verts = new Float32Array([
-        // bottom face (y=0) — larger
-        -s, y0, -s,   s, y0, -s,   s, y0,  s,  -s, y0,  s,
-        // top face (y=legHeight) — smaller
-        -t, y1, -t,   t, y1, -t,   t, y1,  t,  -t, y1,  t,
-      ])
-      geom.setAttribute('position', new THREE.BufferAttribute(verts, 3))
-      // 6 faces × 2 triangles × 3 indices
-      const idx = new Uint16Array([
-        // bottom
-        0, 2, 1,  0, 3, 2,
-        // top
-        4, 5, 6,  4, 6, 7,
-        // front (z+)
-        3, 7, 6,  3, 6, 2,
-        // back (z-)
-        0, 1, 5,  0, 5, 4,
-        // right (x+)
-        1, 2, 6,  1, 6, 5,
-        // left (x-)
-        0, 4, 7,  0, 7, 3,
-      ])
-      geom.setIndex(new THREE.BufferAttribute(idx, 1))
+      // Centered box, full size at top (where aprons join), 60% at the foot
+      const geom = new THREE.BoxGeometry(legSize, legHeight, legSize)
+      const pos = geom.attributes.position
+      for (let i = 0; i < pos.count; i++) {
+        if (pos.getY(i) < 0) {
+          pos.setX(i, pos.getX(i) * 0.6)
+          pos.setZ(i, pos.getZ(i) * 0.6)
+        }
+      }
       geom.computeVertexNormals()
       return geom
     }
